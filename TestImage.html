@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="../css/Index.css">
+        <title>Вопрос-Ответ</title>
+    </head>
+    <body>
+        <form id="imageForm" enctype="multipart/form-data">
+            <input type="file" id="imageInput" name="files" multiple>
+            <input type="text" id="groupNameInput" name="groupName" placeholder="Group name">
+            <button type="submit">Upload</button>
+        </form>
+        <img id="imageElement1" src="" alt="Image">
+        <img id="imageElement2" src="" alt="Image">
+        <!-- <form  enctype="multipart/form-data" action="/settings/uploadFile"  method="post" class="dropzone" 
+                        id="my-awesome-dropzone">
+        </form>  -->
+    </body>
+    <script>
+
+        var imageId = 4;
+        var imageUrl = "https://localhost:7016/api/Image/"+imageId;
+        imageUrl.split(",");
+        var imageElement1 = document.getElementById("imageElement1");
+        imageElement1.src = imageUrl;
+        var imageElement2 = document.getElementById("imageElement2");
+        imageElement2.src = imageUrl;
+
+        document.getElementById("imageForm").addEventListener("submit",function(event){
+            event.preventDefault();
+            var files = (document.getElementById('imageInput')).files;
+            var groupName = (document.getElementById('groupNameInput')).value;
+            
+            //var file = image.files[0];
+            var formData = new FormData();
+            for(let i = 0; i<files.length;i++)
+            {
+                formData.append('files',files[i]);
+                
+            }
+            formData.append('groupName',groupName);
+            console.log(formData.getAll('files'));
+            console.log(formData.getAll('groupName'));
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST","https://localhost:7016/api/Image",true);
+            xhr.setRequestHeader("Content-Type","multipart/form-data");
+            
+            xhr.onload = function(){
+                if(xhr.readyState === 4 && xhr.status == 200){
+                    console.log(xhr.responseText);
+                }else{
+                    console.error('Ошибка '+xhr.status + ':'+ xhr.statusText);
+                }
+            };
+            xhr.onerror = function(){
+                console.error('Ошибка сети');
+            };
+            xhr.send(formData);
+        });
+    </script>
+</html>
