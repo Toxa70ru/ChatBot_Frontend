@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link type="image/x-icon" href="favicon.png" rel="shortcut icon">
+        <link rel="stylesheet" href="../css/UserApplication.css">
+        <link rel="stylesheet" href="../css/header.css">
+        <link rel="stylesheet" href="../css/footer.css">
+        <link rel="stylesheet" href="../css/three.css">
+        <link rel="stylesheet" href="../css/background.css">
+        <link rel="stylesheet" href="../css/Profile.css">
+        <title>Rosneft Q&A</title>
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <img src="Рисунок1.png" width="120" height="60px" />
+            </div>
+            <div class="col-2" id="btn2">
+                <div class="container-2">
+                    <div class="btn btn-two">
+                        <span id="UserFullName" class="fa fa-user" aria-hidden="true">  </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1" id="btn1">
+                <div class="container-1">
+                    <div class="btn btn-one"  onclick="changePage()">
+                        <span>Главная</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3" id="btn3">
+                <div class="container-3">
+                    <div class="btn btn-three" onclick="exit()">
+                        <span>Выйти</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div>
+            <div class="area" >
+                <ul class="circles-black">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                </ul>
+                <ul class="circles-yellow">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div >
+            <div class="three">
+                <h1>Ваши заявки</h1> 
+            </div>
+            <!-- <div class="search-box">
+                <input type="text" name="" class="search-txt" id="searchTxt" placeholder="Введите поисковой запрос"/>
+                <a class="search-btn" onclick=" RemoveContainer()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
+            </div>  -->
+            <!-- <div class="qestion-button" id ="myButton_open">
+                <a class="qestion-btn">
+                    <i class="fa fa-question" aria-hidden="true"></i>
+                </a> 
+            </div>
+            <div class="close-button" id ="myButton_close">
+                <a class="close-btn">
+                    <i class="fa fa-close" aria-hidden="true"></i>
+                </a>
+                
+            </div>   -->
+        </div>
+        <div class="data" style="text-align:center">
+            <div class="listView">
+                <div id="tableContainer" style="text-align:center"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2024, РОСНЕФТЬ<br>Электронная почта: TsymbalAV@tomsknipi.ru</p> 
+        </footer>
+    </body>
+    <script>
+       // document.getElementById('myButton_close').style.display = 'none';
+        function changePage(){
+            window.location.href = "http://10.116.24.6:3000/html/User.html";
+            //window.location.href = "file:///C:/Users/TsymbalAV/source/repos/ViewModel/html/User.html";//локальный тест
+        }
+        function exit(){
+            window.location.replace("http://10.116.24.6:3000/html/index.html");
+        }
+
+        let userInfo = sessionStorage.getItem('username');
+        const UserMass = userInfo.split("/");
+        let Nam = UserMass[2];
+        let midN = UserMass[3];
+        let UpperName = Nam.charAt(0).toUpperCase();
+        let UppermidN = midN.charAt(0).toUpperCase(); 
+        document.getElementById('UserFullName').innerHTML = "  "+UserMass[1]+" "+UpperName+"."+UppermidN+".";
+        
+         // кэш на странице
+         async function setCache(cache=[]){
+            return async function(){
+                if(cache.length <= 0){
+                    //для теста
+                    // const dataApplication = await fetch("https://localhost:7237/api/Applications",{headers:{"Authorization":UserMass[4]}})  //0
+                    // const dataSoftware = await fetch("https://localhost:7237/api/SoftwareNames",{headers:{"Authorization":UserMass[4]}})    //1
+                    // const dataAppeals = await fetch("https://localhost:7237/api/Appeals",{headers:{"Authorization":UserMass[4]}})           //2
+                    // const dataStatus = await fetch("https://localhost:7237/api/Statuses",{headers:{"Authorization":UserMass[4]}})           //3
+                    // const dataUser = await fetch("https://localhost:7237/api/Users/"+UserMass[0],{headers:{"Authorization":UserMass[4]}})   //4
+                    //для теста
+
+                    const dataApplication = await fetch("http://10.116.24.6:90/api/Applications",{headers:{"Authorization":UserMass[4]}})  //0
+                    const dataSoftware = await fetch("http://10.116.24.6:90/api/SoftwareNames",{headers:{"Authorization":UserMass[4]}})    //1
+                    const dataAppeals = await fetch("http://10.116.24.6:90/api/Appeals",{headers:{"Authorization":UserMass[4]}})           //2
+                    const dataStatus = await fetch('http://10.116.24.6:90/api/Statuses',{headers:{"Authorization":UserMass[4]}});          //3  
+                    const dataUser = await fetch("http://10.116.24.6:90/api/Users/"+UserMass[0],{headers:{"Authorization":UserMass[4]}})   //4
+
+                    cache.push(await dataApplication.json());
+                    cache.push(await dataSoftware.json());
+                    cache.push(await dataAppeals.json());
+                    cache.push(await dataStatus.json())
+                    cache.push(await dataUser.json())
+                    console.log("Cache is not init");
+                }
+                return cache;
+            }
+        }
+        const cache = {
+            data: null,
+            row:null
+        }
+        async function getCache(flush = false){
+            if(Object.values(cache)[1] === null){
+                cache.data = await setCache([]);
+                cache.row = await cache.data();
+            }
+            else if(Object.values(cache)[1] !== null){
+                if(flush === true){
+                    cache.row = [];
+                    cache.data = await setCache([]);
+                    cache.row = await cache.data();
+                }
+                else{
+                    console.log("Cached data")
+                }
+            }
+            return cache
+        }
+        // кэш на странице
+        
+        window.addEventListener('DOMContentLoaded',async function(){
+            const data = await getCache(false);
+            var mass = Object.values(data)[1];
+            var massApplications = mass[0];
+            var UserInfo = mass[4];
+
+            createHeaderForApplicationsTable();
+            let UserFullName = UserInfo.surname+" "+UserInfo.name+" "+UserInfo.patronymic;
+
+            for(let i = 0; i<massApplications.length;i++){
+                if(massApplications[i].userId == UserMass[0]){
+                    let id = massApplications[i].id;
+                    //let user = massApplications[i].userFullName;
+                    let appeal = massApplications[i].appealId;
+                    let text = massApplications[i].description;
+                    let PCnumber = massApplications[i].pcNumber;
+                    let status = massApplications[i].statusId;
+                    let SFName = massApplications[i].softwareNameId;
+                    let coment = massApplications[i].coment;
+                    createApplicationsGrid(text,PCnumber,UserFullName,appeal,status,SFName,id,coment);
+                }
+            }
+        });
+
+
+ 
+        function createHeaderForApplicationsTable(){
+            var tableContainer = document.getElementById('tableContainer');
+            let thead = document.createElement('thead');
+            let trHeader =  document.createElement('tr');
+
+            let tdIdHeader = document.createElement('th');
+            let tdUserHeader = document.createElement('th');
+            let tdAppealHeader = document.createElement('th');
+            let tdStatusHeader = document.createElement('th');
+            let tdSofwareHeader = document.createElement('th');
+            let tdPCnumberHeader = document.createElement('th');
+            let tdtextHeader = document.createElement('th');
+            let tdtextComment = document.createElement('th');
+            
+            let tdIdHeaderText = document.createTextNode("Номер заявки");
+            let tdUserFullHeaderText = document.createTextNode("Создатель");
+            let tdAppealHeaderText = document.createTextNode("Причина обращения");
+            let tdStatusHeaderText = document.createTextNode("Статус");
+            let tdSofwareHeaderText = document.createTextNode("ПО");
+            let tdPCnumberHeaderText = document.createTextNode("Номер компьютера");
+            let tdtextHeaderText = document.createTextNode("Описание");
+            let tdtextCommentText = document.createTextNode("Комментарий");
+
+            tdIdHeader.appendChild(tdIdHeaderText);
+            tdUserHeader.appendChild(tdUserFullHeaderText);
+            tdAppealHeader.appendChild(tdAppealHeaderText);
+            tdStatusHeader.appendChild(tdStatusHeaderText);
+            tdSofwareHeader.appendChild(tdSofwareHeaderText);
+            tdPCnumberHeader.appendChild(tdPCnumberHeaderText);
+            tdtextHeader.appendChild(tdtextHeaderText);
+            tdtextComment.appendChild(tdtextCommentText);
+
+            trHeader.appendChild(tdIdHeader);
+            trHeader.appendChild(tdSofwareHeader);
+            trHeader.appendChild(tdUserHeader);
+            trHeader.appendChild(tdAppealHeader);
+            trHeader.appendChild(tdtextHeader);
+            trHeader.appendChild(tdPCnumberHeader);
+            trHeader.appendChild(tdStatusHeader);
+            trHeader.appendChild(tdtextComment);
+            thead.appendChild(trHeader);
+            tableContainer.appendChild(thead);
+
+        }
+
+
+        let clicked = true;
+        async function createApplicationsGrid(text,PCnumber,user,appeal,status,SFName,id,coment){
+            const data = await getCache(false);
+            var mass = Object.values(data)[1];
+            var massAppealName = mass[2];
+            var massStatusName = mass[3];
+            var massSofwareName = mass[1];
+
+            let AppealName;
+            for(let i = 0;i<massAppealName.length;i++){
+                if(massAppealName[i].id == appeal){
+                    AppealName = massAppealName[i].cause;
+                }
+            }
+
+            let StatusName;
+            for(let i = 0;i<massStatusName.length;i++){
+                if(massStatusName[i].id == status){
+                    StatusName = massStatusName[i].condition;
+                    //console.log(StatusName);
+                }
+            }
+
+            let SofwareName;
+            for(let i = 0;i<massSofwareName.length;i++){
+                if(massSofwareName[i].id == SFName){
+                    SofwareName = massSofwareName[i].softName;
+                    //console.log(SofwareName);
+                }
+            }
+
+            var tableContainer = document.getElementById('tableContainer');
+            let tr = document.createElement('tr');
+
+            let tdIdHeader = document.createElement('td');
+            let tdUserFullName = document.createElement('td');
+            let tdAppealName = document.createElement('td');
+            let tdStatusName = document.createElement('td');
+            let tdSofwareName = document.createElement('td');
+            let tdPCnumber = document.createElement('td');
+            let tdtext = document.createElement('td');
+            let tdComent = document.createElement('td');
+            
+            let tdIdHeaderText = document.createTextNode(id);
+            let tdUserFullNameText = document.createTextNode(user);
+            let tdAppealNameText = document.createTextNode(AppealName);
+            let tdStatusNameText = document.createTextNode(StatusName);
+            let tdSofwareNameText = document.createTextNode(SofwareName);
+            let tdPCnumberText = document.createTextNode(PCnumber);
+            let tdtextText = document.createTextNode(text);
+            let tdComentText = document.createTextNode(coment);
+            
+            tdIdHeader.appendChild(tdIdHeaderText);
+            tdUserFullName.appendChild(tdUserFullNameText);
+            tdAppealName.appendChild(tdAppealNameText);
+            tdStatusName.appendChild(tdStatusNameText);
+            tdSofwareName.appendChild(tdSofwareNameText);
+            tdPCnumber.appendChild(tdPCnumberText);
+            tdtext.appendChild(tdtextText);
+            tdComent.appendChild(tdComentText);
+
+            tr.appendChild(tdIdHeader);
+            tr.appendChild(tdSofwareName);
+            tr.appendChild(tdUserFullName);
+            tr.appendChild(tdAppealName);
+            tr.appendChild(tdtext);
+            tr.appendChild(tdPCnumber);
+            tr.appendChild(tdStatusName);
+            tr.appendChild(tdComent);
+
+            tableContainer.appendChild(tr);
+        }
+    </script>
+</html>
